@@ -7,7 +7,7 @@ import 'dart:convert';
 class ApiService {
   static Future<List<Routine>> fetchRoutines() async {
     // Retrieve the JWT token from SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance(); 
     String? token = prefs.getString('access_token');
 
     if (token == null) {
