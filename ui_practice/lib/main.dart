@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ui_practice/config/config.dart';
 import 'package:ui_practice/homepage.dart';
+import 'package:ui_practice/modals/user.dart';
+import 'package:ui_practice/user_service.dart';
 import 'login_screen.dart';
 import 'simulated_notifications.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -41,24 +47,52 @@ class _SplashScreenState extends State<SplashScreen> {
     _checkToken();
   }
 
-  Future<void> _checkToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('access_token');
+Future<void> _checkToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('access_token');
+   String url = AppConfig.apiUrl;
 
-    if (token != null) {
-      // Navigate to HomePage if token exists
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+  if (token != null) {
+    try {
+      final response = await http.get(
+        Uri.parse('$url/user/me'), // change to your endpoint
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
       );
-    } else {
-      // Navigate to LoginScreen if no token
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final user = User.fromJson(data);
+        UserService().setUser(user); // Save globally
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      } else {
+        // Token invalid or error
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error fetching user: $e');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     }
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

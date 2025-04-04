@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ui_practice/api/mood.dart';
 import 'package:ui_practice/education_screen.dart';
+import 'package:ui_practice/user_service.dart';
 
 class TopSection extends StatefulWidget {
   const TopSection({super.key});
@@ -11,6 +12,9 @@ class TopSection extends StatefulWidget {
 
 class _TopSectionState extends State<TopSection> {
   bool? _hasMoodToday;
+  final user = UserService().user;
+
+
 
   @override
   void initState() {
@@ -76,9 +80,9 @@ class _TopSectionState extends State<TopSection> {
                       backgroundImage: AssetImage('assets/rosis.png'),
                     ),
                     const SizedBox(width: 16),
-                    const Expanded(
+                     Expanded(
                       child: Text(
-                        "Hi Rosis, how are you feeling today?",
+                        "Hi ${user?.username}, how are you feeling today?",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
