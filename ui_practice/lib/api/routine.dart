@@ -43,7 +43,7 @@ class ApiService {
     String url = AppConfig.apiUrl;
 
     final response = await http.post(
-      Uri.parse('$url/routines'),
+      Uri.parse('$url/routines/'),
       headers: {
         'Authorization': 'Bearer $token', // Pass JWT Token in Header
         'Content-Type': 'application/json',

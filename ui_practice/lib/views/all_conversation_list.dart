@@ -53,7 +53,10 @@ class _AllConversationListScreenState extends State<AllConversationListScreen> {
         throw Exception("Failed to load conversations");
       }
     } catch (e) {
-      print("Error fetching conversations: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(content: Text("Failed to load conversations. Please try again.")),
+);
+
     }
   }
 

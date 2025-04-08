@@ -48,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
 Future<void> _checkToken() async {
+  print("Checking the token");
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('access_token');
    String url = AppConfig.apiUrl;

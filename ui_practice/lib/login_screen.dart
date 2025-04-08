@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ui_practice/config/config.dart';
+import 'package:ui_practice/modals/user.dart';
+import 'package:ui_practice/user_service.dart';
 import 'signup_screen.dart';
 import 'homepage.dart';
 import 'package:http/http.dart' as http;
@@ -42,18 +44,21 @@ Future<void> _login() async {
         Uri.parse('$url/auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'email': _email,
+          'email': _email, 
           'password': _password,
         }),
       );
 
       if (response.statusCode == 200) {
+        print(response.body.toString());
         final responseData = json.decode(response.body);
 
         if (responseData['access_token'] != null) {
           // Save token in SharedPreferences
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('access_token', responseData['access_token']);
+                  final user = User.fromJson(responseData['user']);
+        UserService().setUser(user);
 
           Fluttertoast.showToast(
               msg: "Login Successful!", gravity: ToastGravity.BOTTOM);

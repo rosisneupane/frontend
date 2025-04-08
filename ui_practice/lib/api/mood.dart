@@ -51,7 +51,7 @@ class MoodApiService {
     String url = AppConfig.apiUrl;
 
     final response = await http.post(
-      Uri.parse('$url/mood'),
+      Uri.parse('$url/mood/'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
